@@ -1,6 +1,6 @@
-use zero2prod;
 use reqwest;
 use std::net::TcpListener;
+use zero2prod;
 
 // `actix_rt::test` is the testing equivalent of `actix_rt::main`.
 // It also spares you from having to specify the `#[test]` attribute.
