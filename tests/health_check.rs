@@ -1,10 +1,9 @@
 use reqwest;
+use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
-use sqlx::{PgPool, PgConnection, Connection, Executor};
-use zero2prod::startup::run;
-use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use uuid::Uuid;
-use std::rc::Rc;
+use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::startup::run;
 
 pub struct TestApp {
     pub address: String,
