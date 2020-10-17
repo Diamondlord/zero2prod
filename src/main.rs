@@ -2,14 +2,12 @@ use sqlx::PgPool;
 use std::net::TcpListener;
 use zero2prod::configuration::get_configuration;
 use zero2prod::startup::run;
-use env_logger::Env;
+use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    // `init` does call `set_logger`, so this is all we need to do.
-    // We are falling back to printing all logs at info-level or above
-    // if the RUST_LOG environment variable has not been set.
-    env_logger::from_env(Env::default().default_filter_or("info")).init();
+    let subscriber = get_subscriber("zero2prod".into(), "info".into());
+    init_subscriber(subscriber);
     let configuration = get_configuration().expect("Failed to read configuration.");
     let connection_string = configuration.database.connection_string();
     let pg_pool = PgPool::connect(&connection_string)

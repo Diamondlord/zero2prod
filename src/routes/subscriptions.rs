@@ -1,6 +1,7 @@
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use sqlx::PgPool;
+use tracing_futures::Instrument;
 use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
@@ -27,10 +28,10 @@ pub async fn subscribe(
     // Bear with me for now, but don't do this at home.
     // See the following section on `tracing-futures`
     let _request_span_guard = request_span.enter();
-    tracing::info!(
-        "request_id {} - Saving new subscriber details in the database",
-        request_id
-    );
+    // We do not call `.enter` on query_span!
+    // `.instrument` takes care of it at the right moments
+    // in the query future lifetime
+    let query_span = tracing::info_span!("Saving new subscriber details in the database");
     sqlx::query!(
         r#"
         INSERT INTO subscriptions (id, email, name, subscribed_at)
@@ -42,15 +43,16 @@ pub async fn subscribe(
         Utc::now()
     )
     .execute(pg_pool.as_ref())
+    // First we attach the instrumentation, then we `.await` it
+    .instrument(query_span)
     .await
     .map_err(|e| {
+        // Yes, this error log falls outside of `query_span`
+        // We'll rectify it later, pinky swear!
         log::error!("Failed to execute query: {:?}", e);
         HttpResponse::InternalServerError().finish()
     })?;
-    tracing::info!(
-        "request_id {} - New subscriber details have been saved",
-        request_id
-    );
+    tracing::info!("New subscriber details have been saved");
     Ok(HttpResponse::Ok().finish())
     // `_request_span_guard` is dropped at the end of `subscribe`
     // That's when we "exit" the span
