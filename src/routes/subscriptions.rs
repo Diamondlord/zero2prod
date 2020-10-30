@@ -35,9 +35,7 @@ pub async fn subscribe(
 ) -> Result<HttpResponse, HttpResponse> {
     insert_subscriber(db_pool, payload)
         .await
-        .map_err(|e| {
-            HttpResponse::InternalServerError().finish()
-        })?;
+        .map_err(|e| HttpResponse::InternalServerError().finish())?;
     Ok(HttpResponse::Ok().finish())
 }
 
@@ -59,11 +57,11 @@ async fn insert_subscriber(
         payload.name,
         Utc::now()
     )
-        .execute(db_pool.as_ref())
-        .await
-        .map_err(|e| {
-            tracing::error!("Failed to execute query: {:?}", e);
-            e
-        })?;
+    .execute(db_pool.as_ref())
+    .await
+    .map_err(|e| {
+        tracing::error!("Failed to execute query: {:?}", e);
+        e
+    })?;
     Ok(())
 }
