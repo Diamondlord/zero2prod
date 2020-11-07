@@ -16,7 +16,7 @@ path = "src/lib.rs"
 # have a look at the workspace feature - we'll cover it later on.
 [[bin]]
 path = "src/main.rs"
-name = "app"
+name = "zero2prod"
 
 [dependencies]
 actix-web = "3.0.2"
@@ -26,7 +26,7 @@ actix-rt = "1.1.1"
 # The feature is not enabled by default to avoid pulling in
 # unnecessary dependencies for projects that do not need it.
 serde = { version = "1", features = ["derive"]}
-sqlx = { version = "0.4.0-beta.1", default-features = false, features = [ "runtime-tokio", "macros", "postgres", "uuid", "chrono", "migrate"] }
+sqlx = { version = "0.4.0-beta.1", default-features = false, features = [ "runtime-tokio", "macros", "postgres", "uuid", "chrono", "migrate", "offline"] }
 config = "0.10.1"
 chrono = "0.4.19"
 uuid = { version = "0.8.1", features = ["v4"] }
