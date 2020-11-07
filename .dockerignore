@@ -5,4 +5,3 @@ github
 target
 tests
 migrations
-sqlx-data.json
