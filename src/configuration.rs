@@ -1,5 +1,5 @@
-use std::convert::{TryFrom, TryInto};
 use serde_aux::field_attributes::deserialize_number_from_string;
+use std::convert::{TryFrom, TryInto};
 
 #[derive(serde::Deserialize)]
 pub struct Settings {
@@ -23,7 +23,6 @@ pub struct ApplicationSettings {
     pub port: u16,
     pub host: String,
 }
-
 
 impl DatabaseSettings {
     pub fn connection_string(&self) -> String {
