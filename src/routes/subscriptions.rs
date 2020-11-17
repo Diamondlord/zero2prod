@@ -57,9 +57,6 @@ async fn insert_subscriber(
         payload.name,
         Utc::now()
     );
-    query
-        .execute(db_pool.as_ref())
-        .await
-        .map_err(|e| e)?;
+    query.execute(db_pool.as_ref()).await.map_err(|e| e)?;
     Ok(())
 }
