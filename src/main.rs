@@ -6,7 +6,7 @@ use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    let subscriber = get_subscriber("zero2prod".into(), "info".into());
+    let subscriber = get_subscriber("zero2prod".into(), "info".into()).unwrap();
     init_subscriber(subscriber);
 
     let configuration = get_configuration().expect("Failed to read configuration.");

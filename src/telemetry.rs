@@ -14,11 +14,19 @@ use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
 /// We need to explicitly call out that the returned subscriber is
 /// `Send` and `Sync` to make it possible to pass it to `init_subscriber`
 /// later on.
-pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
+// pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
+pub fn get_subscriber(name: String, env_filter: String) -> Result<impl Subscriber + Send + Sync, Box<dyn std::error::Error + Send + Sync + 'static>> {
+    // Install a new OpenTelemetry trace pipeline
+    let (tracer, _uninstall) = opentelemetry_jaeger::new_pipeline().install()?;
+
+    // Create a tracing layer with the configured tracer
+    let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
+
     // We are falling back to printing all spans at info-level or above
     // if the RUST_LOG environment variable has not been set.
     let env_filter =
         EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(env_filter));
+
     let formatting_layer = BunyanFormattingLayer::new(
         name,
         // Output the formatted spans to stdout.
@@ -26,10 +34,11 @@ pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Sen
     );
     // The `with` method is provided by `SubscriberExt`, an extension
     // trait for `Subscriber` exposed by `tracing_subscriber`
-    Registry::default()
+    Ok(Registry::default()
         .with(env_filter)
         .with(JsonStorageLayer)
         .with(formatting_layer)
+        .with(telemetry))
 }
 
 /// Register a subscriber as global default to process span data.
