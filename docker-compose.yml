@@ -1,0 +1,30 @@
+version: "3.1"
+services:
+#  zero2prod:
+#    build:
+#      context: ./
+#      dockerfile: ./Dockerfile
+#    image: zero2prod:latest
+#    ports:
+#      - 8000:8000
+  jaeger:
+    image: jaegertracing/all-in-one:1.20
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+      - JAEGER_DISABLED=true
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./configuration/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+

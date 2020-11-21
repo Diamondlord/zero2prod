@@ -5,13 +5,15 @@ use actix_web::{web, App, HttpServer};
 use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
+use actix_web_opentelemetry::RequestTracing;
 
 pub fn run(listener: TcpListener, pg_pool: PgPool) -> Result<Server, std::io::Error> {
     let pg_pool = Data::new(pg_pool);
     let server = HttpServer::new(move || {
         App::new()
             .wrap(TracingLogger)
-            .route("/health_check", web::get().to(health_check))
+            .wrap(RequestTracing::new())
+            .route("/health_check", web::to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
             // Get a pointer copy and attach it to the application state
             .app_data(pg_pool.clone())

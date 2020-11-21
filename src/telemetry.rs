@@ -15,9 +15,12 @@ use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
 /// `Send` and `Sync` to make it possible to pass it to `init_subscriber`
 /// later on.
 // pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
-pub fn get_subscriber(name: String, env_filter: String) -> Result<impl Subscriber + Send + Sync, Box<dyn std::error::Error + Send + Sync + 'static>> {
+pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
     // Install a new OpenTelemetry trace pipeline
-    let (tracer, _uninstall) = opentelemetry_jaeger::new_pipeline().install()?;
+    let (tracer, _uninstall) = opentelemetry_jaeger::new_pipeline()
+        .with_service_name("zero2prod")
+        .install()
+        .expect("pipeline install error");
 
     // Create a tracing layer with the configured tracer
     let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
@@ -34,11 +37,11 @@ pub fn get_subscriber(name: String, env_filter: String) -> Result<impl Subscribe
     );
     // The `with` method is provided by `SubscriberExt`, an extension
     // trait for `Subscriber` exposed by `tracing_subscriber`
-    Ok(Registry::default()
+    Registry::default()
         .with(env_filter)
         .with(JsonStorageLayer)
         .with(formatting_layer)
-        .with(telemetry))
+        .with(telemetry)
 }
 
 /// Register a subscriber as global default to process span data.

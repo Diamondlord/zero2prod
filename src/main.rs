@@ -3,10 +3,12 @@ use std::net::TcpListener;
 use zero2prod::configuration::get_configuration;
 use zero2prod::startup::run;
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
+use opentelemetry::{global, sdk::propagation::TraceContextPropagator};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    let subscriber = get_subscriber("zero2prod".into(), "info".into()).unwrap();
+    global::set_text_map_propagator(TraceContextPropagator::new());
+    let subscriber = get_subscriber("zero2prod".into(), "info".into());
     init_subscriber(subscriber);
 
     let configuration = get_configuration().expect("Failed to read configuration.");

@@ -262,6 +262,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-opentelemetry"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7c2af09ed5912db416fe4556472c812f5d6b7c8a7785a7929a28ca7e4648b26"
+dependencies = [
+ "actix-http",
+ "actix-web",
+ "futures",
+ "opentelemetry",
+ "opentelemetry-semantic-conventions",
+ "serde 1.0.116",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -676,6 +690,15 @@ dependencies = [
  "pkg-config",
  "vcpkg",
  "winapi 0.3.9",
+]
+
+[[package]]
+name = "dashmap"
+version = "4.0.0-rc6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "308a6703be2d759cb5fb7b80a23547fe73a8d5ebf70d3a4ca7f0ef4c0bfc2265"
+dependencies = [
+ "once_cell",
 ]
 
 [[package]]
@@ -1538,12 +1561,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e260f0ef133e1043b95143f83cfc8f6be023cf4b46a526da0212039b45392679"
 dependencies = [
  "async-trait",
+ "dashmap",
+ "fnv",
  "futures",
  "lazy_static",
  "percent-encoding",
  "pin-project",
  "rand",
  "regex",
+ "thiserror",
  "tokio",
 ]
 
@@ -1559,6 +1585,15 @@ dependencies = [
  "opentelemetry",
  "thrift",
  "tokio",
+]
+
+[[package]]
+name = "opentelemetry-semantic-conventions"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3251f8e16776c613633602eb9d03753d128901bcaffe81b99b211204c4108798"
+dependencies = [
+ "opentelemetry",
 ]
 
 [[package]]
@@ -2899,6 +2934,7 @@ version = "0.1.0"
 dependencies = [
  "actix-rt",
  "actix-web",
+ "actix-web-opentelemetry",
  "chrono",
  "config",
  "lazy_static",
