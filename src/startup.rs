@@ -2,10 +2,10 @@ use crate::routes::*;
 use actix_web::dev::Server;
 use actix_web::web::Data;
 use actix_web::{web, App, HttpServer};
+use actix_web_opentelemetry::RequestTracing;
 use sqlx::PgPool;
 use std::net::TcpListener;
 use tracing_actix_web::TracingLogger;
-use actix_web_opentelemetry::RequestTracing;
 
 pub fn run(listener: TcpListener, pg_pool: PgPool) -> Result<Server, std::io::Error> {
     let pg_pool = Data::new(pg_pool);

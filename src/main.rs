@@ -1,9 +1,9 @@
+use opentelemetry::{global, sdk::propagation::TraceContextPropagator};
 use sqlx::postgres::PgPoolOptions;
 use std::net::TcpListener;
 use zero2prod::configuration::get_configuration;
 use zero2prod::startup::run;
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
-use opentelemetry::{global, sdk::propagation::TraceContextPropagator};
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
