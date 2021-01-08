@@ -69,6 +69,3 @@ async fn insert_subscriber(
     query.execute(db_pool.as_ref()).await.map_err(|e| e)?;
     Ok(())
 }
-
-
-

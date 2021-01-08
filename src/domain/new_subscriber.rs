@@ -1,4 +1,4 @@
-use crate::domain::{ SubscriberName};
+use crate::domain::{ SubscriberName };
 
 pub struct NewSubscriber {
     pub email: String,
