@@ -1,12 +1,6 @@
 use unicode_segmentation::UnicodeSegmentation;
 
-pub struct NewSubscriber {
-    pub email: String,
-    pub name: SubscriberName,
-}
-
 #[derive(Debug)]
-
 pub struct SubscriberName(String);
 
 impl SubscriberName {
@@ -50,7 +44,6 @@ impl AsRef<str> for SubscriberName {
         &self.0
     }
 }
-
 
 #[cfg(test)]
 mod tests {

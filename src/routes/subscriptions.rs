@@ -36,7 +36,7 @@ pub async fn subscribe(
     let name = SubscriberName::parse(form.0.name)
         .map_err(|_| HttpResponse::BadRequest().finish())?;
     let new_subscriber = NewSubscriber {
-        email: form.0.email, // TODO: add email validation and confirmation
+        email: form.0.email,
         name,
     };
     insert_subscriber(db_pool, &new_subscriber)
@@ -69,3 +69,6 @@ async fn insert_subscriber(
     query.execute(db_pool.as_ref()).await.map_err(|e| e)?;
     Ok(())
 }
+
+
+
