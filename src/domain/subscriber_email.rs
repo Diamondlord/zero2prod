@@ -1,9 +1,15 @@
+use validator::validate_email;
+
 #[derive(Debug)]
 pub struct SubscriberEmail(String);
 
 impl SubscriberEmail {
     pub fn parse(s: String) -> Result<Self, String> {
-        Ok(Self(s))
+        if validate_email(&s) {
+            Ok(Self(s))
+        } else {
+            Err(format!("{} is not a valid subscriber email.", s))
+        }
     }
 }
 
@@ -16,6 +22,8 @@ impl AsRef<str> for SubscriberEmail {
 #[cfg(test)]
 mod tests {
     use super::SubscriberEmail;
+    use fake::faker::internet::en::SafeEmail;
+    use fake::Fake;
     use claim::assert_err;
 
     #[test]
@@ -40,5 +48,11 @@ mod tests {
     fn email_missing_domain_is_rejected() {
         let email = "test_email".to_string();
         assert_err!(SubscriberEmail::parse(email));
+    }
+
+    #[test]
+    fn valid_emails_are_parsed_successfully() {
+        let email = SafeEmail().fake();
+        assert_ok!(SubscriberEmail::parse(email));
     }
 }
