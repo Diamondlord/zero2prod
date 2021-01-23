@@ -1,9 +1,9 @@
+use crate::domain::{NewSubscriber, SubscriberEmail, SubscriberName};
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use sqlx::PgPool;
-use uuid::Uuid;
-use crate::domain::{NewSubscriber, SubscriberName, SubscriberEmail};
 use std::convert::TryInto;
+use uuid::Uuid;
 
 #[derive(serde::Deserialize)]
 pub struct SubscribeRequest {
@@ -44,7 +44,9 @@ pub async fn subscribe(
     // Retrieving a connection from the application state!
     db_pool: web::Data<PgPool>,
 ) -> Result<HttpResponse, HttpResponse> {
-    let new_subscriber = form.0.try_into()
+    let new_subscriber = form
+        .0
+        .try_into()
         .map_err(|_| HttpResponse::BadRequest().finish())?;
     insert_subscriber(db_pool, &new_subscriber)
         .await
@@ -56,8 +58,8 @@ pub async fn subscribe(
 }
 
 #[tracing::instrument(
-name = "Saving new subscriber details in the database",
-skip(new_subscriber, db_pool)
+    name = "Saving new subscriber details in the database",
+    skip(new_subscriber, db_pool)
 )]
 async fn insert_subscriber(
     db_pool: web::Data<PgPool>,

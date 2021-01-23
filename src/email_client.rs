@@ -23,7 +23,7 @@ impl EmailClient {
         recipient: SubscriberEmail,
         subject: &str,
         html_content: &str,
-        text_content: &str
+        text_content: &str,
     ) -> Result<(), reqwest::Error> {
         let url = format!("{}/email", self.base_url);
         let request_body = SendEmailRequestBody {
@@ -33,8 +33,7 @@ impl EmailClient {
             html_body: html_content.to_owned(),
             text_body: text_content.to_owned(),
         };
-        self
-            .http_client
+        self.http_client
             .post(&url)
             .header("X-Postmark-Server-Token", &self.authorization_token)
             .json(&request_body)
@@ -60,7 +59,7 @@ mod tests {
     use fake::faker::internet::en::SafeEmail;
     use fake::faker::lorem::en::{Paragraph, Sentence};
     use fake::{Fake, Faker};
-    use wiremock::matchers::{header, header_exists, path, method};
+    use wiremock::matchers::{header, header_exists, method, path};
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
     #[tokio::test]

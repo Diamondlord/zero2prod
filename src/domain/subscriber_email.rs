@@ -22,10 +22,10 @@ impl AsRef<str> for SubscriberEmail {
 #[cfg(test)]
 mod tests {
     use super::SubscriberEmail;
+    use claim::assert_err;
     use fake::faker::internet::en::SafeEmail;
     use fake::Fake;
     use quickcheck::{Arbitrary, Gen};
-    use claim::assert_err;
 
     #[test]
     fn empty_string_is_rejected() {

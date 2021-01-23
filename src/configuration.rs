@@ -1,7 +1,7 @@
+use crate::domain::SubscriberEmail;
 use serde_aux::field_attributes::deserialize_number_from_string;
 use sqlx::postgres::{PgConnectOptions, PgSslMode};
 use std::convert::{TryFrom, TryInto};
-use crate::domain::SubscriberEmail;
 
 #[derive(serde::Deserialize)]
 pub struct Settings {
@@ -103,7 +103,6 @@ impl TryFrom<String> for Environment {
         }
     }
 }
-
 
 #[derive(serde::Deserialize)]
 pub struct EmailClientSettings {
