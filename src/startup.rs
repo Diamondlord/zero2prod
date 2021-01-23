@@ -23,6 +23,7 @@ pub fn run(
             .route("/subscriptions", web::post().to(subscribe))
             // Get a pointer copy and attach it to the application state
             .app_data(pg_pool.clone())
+            .app_data(email_client.clone())
     })
     .listen(listener)?
     .run();
