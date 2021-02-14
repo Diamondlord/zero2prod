@@ -16,15 +16,6 @@ use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
 /// later on.
 // pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
 pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Send + Sync {
-    // Install a new OpenTelemetry trace pipeline
-    let (tracer, _uninstall) = opentelemetry_jaeger::new_pipeline()
-        .with_service_name("zero2prod")
-        .install()
-        .expect("pipeline install error");
-
-    // Create a tracing layer with the configured tracer
-    let telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
-
     // We are falling back to printing all spans at info-level or above
     // if the RUST_LOG environment variable has not been set.
     let env_filter =
@@ -41,7 +32,6 @@ pub fn get_subscriber(name: String, env_filter: String) -> impl Subscriber + Sen
         .with(env_filter)
         .with(JsonStorageLayer)
         .with(formatting_layer)
-        .with(telemetry)
 }
 
 /// Register a subscriber as global default to process span data.
