@@ -1,4 +1,4 @@
-FROM rust:1.47 as planner
+FROM rust:1.5 as planner
 WORKDIR app
 # We only pay the installation cost once,
 # it will be cached from the second build onwards
@@ -9,14 +9,14 @@ COPY . .
 # Compute a lock-like file for our project
 RUN cargo chef prepare  --recipe-path recipe.json
 
-FROM rust:1.47 as cacher
+FROM rust:1.5 as cacher
 WORKDIR app
 RUN cargo install cargo-chef
 COPY --from=planner /app/recipe.json recipe.json
 # Build our project dependencies, not our application!
 RUN cargo chef cook --release --recipe-path recipe.json
 
-FROM rust:1.47 as builder
+FROM rust:1.5 as builder
 WORKDIR app
 # Copy over the cached dependencies
 COPY --from=cacher /app/target target
