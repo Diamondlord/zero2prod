@@ -40,12 +40,10 @@ pub async fn spawn_app() -> TestApp {
     // The first time `initialize` is invoked the code in `TRACING` is executed.
     // All other invocations will instead skip execution.
     lazy_static::initialize(&TRACING);
-    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind random port");
-    let port = listener.local_addr().unwrap().port();
-    let address = format!("http://127.0.0.1:{}", port);
-
     let mut configuration = get_configuration().expect("Failed to read configuration.");
 
+    configuration.application.host = "127.0.0.1".into();
+    configuration.application.port = 0;
     configuration.database.database_name = Uuid::new_v4().to_string();
     configure_database(&configuration.database).await;
 
@@ -53,7 +51,11 @@ pub async fn spawn_app() -> TestApp {
         .await
         .expect("Failed to build application.");
     // Get the port before spawning the application
-    let address = format!("http://127.0.0.1:{}", application.port());
+    let address = format!(
+        "http://{}:{}",
+        configuration.application.host,
+        application.port()
+    );
     let _ = tokio::spawn(application.run_until_stopped());
 
     TestApp {
