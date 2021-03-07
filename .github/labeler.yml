@@ -9,6 +9,4 @@ config:
   - configuration/*
 source:
   - any: ['src/**/*']
-deep source:
-  - any: ['**/**/*']
 
