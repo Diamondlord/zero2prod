@@ -10,5 +10,5 @@ config:
 source:
   - any: ['src/**/*']
 deep source:
-  - any: ['./**/**/*']
+  - any: ['**/**/*']
 
