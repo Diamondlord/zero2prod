@@ -5,6 +5,7 @@ use sqlx::PgPool;
 use std::convert::TryInto;
 use uuid::Uuid;
 
+// comment
 #[derive(serde::Deserialize)]
 pub struct SubscribeRequest {
     email: String,
