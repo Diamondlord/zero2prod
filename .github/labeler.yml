@@ -1,12 +1,14 @@
 dependencies:
-  - cargo.*
+  - 'cargo.*'
 tests:
-  - tests/*
-  - tests/**/*
+  - 'tests/*'
+  - 'tests/**/*'
 actions:
-  - .github/workflows/*
+  - '.github/workflows/*'
 config:
-  - configuration/*
+  - 'configuration/*'
 source:
-  - any: ['src/*', 'src/**/*']
+  - 'src/*'
+  - 'src/**/*'
+
 
