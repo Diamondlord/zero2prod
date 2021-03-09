@@ -8,5 +8,5 @@ actions:
 config:
   - configuration/*
 source:
-  - any: ['src/**/*']
+  - any: ['src/*', 'src/**/*']
 
