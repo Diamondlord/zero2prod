@@ -4,3 +4,7 @@ pub struct NewSubscriber {
     pub email: SubscriberEmail,
     pub name: SubscriberName,
 }
+
+pub struct test {
+
+}
