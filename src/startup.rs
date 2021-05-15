@@ -74,7 +74,7 @@ pub fn run(
     let email_client = Data::new(email_client);
     let server = HttpServer::new(move || {
         App::new()
-            .wrap(TracingLogger)
+            .wrap(TracingLogger::default())
             .route("/health_check", web::to(health_check))
             .route("/subscriptions", web::post().to(subscribe))
             // Get a pointer copy and attach it to the application state
