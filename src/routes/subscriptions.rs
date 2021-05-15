@@ -1,10 +1,10 @@
 use crate::domain::{NewSubscriber, SubscriberEmail, SubscriberName};
+use crate::email_client::EmailClient;
 use actix_web::{web, HttpResponse};
 use chrono::Utc;
 use sqlx::PgPool;
 use std::convert::TryInto;
 use uuid::Uuid;
-use crate::email_client::EmailClient;
 
 #[derive(serde::Deserialize)]
 pub struct SubscribeRequest {

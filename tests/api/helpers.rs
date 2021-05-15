@@ -1,11 +1,11 @@
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use std::net::TcpListener;
 use uuid::Uuid;
+use wiremock::MockServer;
 use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use zero2prod::email_client::EmailClient;
 use zero2prod::startup::{get_connection_pool, Application};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
-use wiremock::MockServer;
 
 // Ensure that the `tracing` stack is only initialised once using `lazy_static`
 lazy_static::lazy_static! {
@@ -46,9 +46,9 @@ pub async fn spawn_app() -> TestApp {
     let email_server = MockServer::start().await;
 
     let mut configuration = {
-      let mut c = get_configuration().expect("Failed to read configuration.");
-      c.email_client.base_url = email_server.uri();
-      c
+        let mut c = get_configuration().expect("Failed to read configuration.");
+        c.email_client.base_url = email_server.uri();
+        c
     };
 
     configuration.application.host = "127.0.0.1".into();

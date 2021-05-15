@@ -93,6 +93,6 @@ async fn subscribe_sends_a_confirmation_email_for_valid_data() {
         .await;
     app.post_subscriptions(body.into()).await;
 
-  // Assert
-  // Mock asserts on drop
+    // Assert
+    // Mock asserts on drop
 }
