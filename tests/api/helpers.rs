@@ -5,6 +5,7 @@ use zero2prod::configuration::{get_configuration, DatabaseSettings};
 use zero2prod::email_client::EmailClient;
 use zero2prod::startup::{get_connection_pool, Application};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
+use wiremock::MockServer;
 
 // Ensure that the `tracing` stack is only initialised once using `lazy_static`
 lazy_static::lazy_static! {
@@ -18,6 +19,7 @@ lazy_static::lazy_static! {
 pub struct TestApp {
     pub address: String,
     pub db_pool: PgPool,
+    pub email_server: MockServer,
 }
 
 impl TestApp {
@@ -40,7 +42,14 @@ pub async fn spawn_app() -> TestApp {
     // The first time `initialize` is invoked the code in `TRACING` is executed.
     // All other invocations will instead skip execution.
     lazy_static::initialize(&TRACING);
-    let mut configuration = get_configuration().expect("Failed to read configuration.");
+
+    let email_server = MockServer::start().await;
+
+    let mut configuration = {
+      let mut c = get_configuration().expect("Failed to read configuration.");
+      c.email_client.base_url = email_server.uri();
+      c
+    };
 
     configuration.application.host = "127.0.0.1".into();
     configuration.application.port = 0;
@@ -63,6 +72,7 @@ pub async fn spawn_app() -> TestApp {
         db_pool: get_connection_pool(&configuration.database)
             .await
             .expect("Failed to connect to the database"),
+        email_server,
     }
 }
 
