@@ -17,6 +17,7 @@ DB_HOST="${POSTGRES_HOST:=localhost}"
 
 # Launch postgres using Docker
 # Allow to skip Docker if a dockerized Postgres database is already running
+echo "SKIP_DOCKER=$SKIP_DOCKER"
 if [[ -z "${SKIP_DOCKER}" ]]
 then
   # if a postgres container is running, print instructions to kill it and exit
