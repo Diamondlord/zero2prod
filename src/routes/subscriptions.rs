@@ -4,6 +4,7 @@ use chrono::Utc;
 use sqlx::PgPool;
 use std::convert::TryInto;
 use uuid::Uuid;
+use crate::email_client::EmailClient;
 
 #[derive(serde::Deserialize)]
 pub struct SubscribeRequest {
@@ -43,6 +44,7 @@ pub async fn subscribe(
     form: web::Form<SubscribeRequest>,
     // Retrieving a connection from the application state!
     db_pool: web::Data<PgPool>,
+    email_client: web::Data<EmailClient>,
 ) -> Result<HttpResponse, HttpResponse> {
     let new_subscriber = form
         .0
@@ -54,6 +56,20 @@ pub async fn subscribe(
             tracing::error!("Failed to execute query: {:?}", e);
             HttpResponse::InternalServerError().finish()
         })?;
+
+    email_client
+        .send_email(
+            new_subscriber.email,
+            "Welcome!",
+            "Welcome to our newsletter!",
+            "Welcome to our newsletter!",
+        )
+        .await
+        .map_err(|e| {
+            tracing::error!("failed to send confirmation email: {:?}", e);
+            HttpResponse::InternalServerError().finish()
+        })?;
+
     Ok(HttpResponse::Ok().finish())
 }
 
